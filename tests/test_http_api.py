@@ -1,15 +1,9 @@
 import json
 
-from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from mcp_talib.http_api import create_http_app
+from mcp_talib.http_api_server import create_http_api_app
 from mcp_talib import indicators
-
-
-class DummyMCP:
-    def streamable_http_app(self) -> FastAPI:
-        return FastAPI()
 
 
 class FakeIndicator:
@@ -24,14 +18,12 @@ class FakeIndicator:
 
 
 def test_list_tools(monkeypatch):
-    dummy = DummyMCP()
-
     def fake_list():
         return ["sma", "ema", "rsi"]
 
     monkeypatch.setattr(indicators.registry, "list_indicators", fake_list, raising=False)
 
-    app = create_http_app(dummy)
+    app = create_http_api_app()
     client = TestClient(app)
 
     r = client.get("/api/tools")
@@ -42,10 +34,9 @@ def test_list_tools(monkeypatch):
 
 
 def test_call_tool_success(monkeypatch):
-    dummy = DummyMCP()
     monkeypatch.setattr(indicators.registry, "get_indicator", lambda name: FakeIndicator(), raising=False)
 
-    app = create_http_app(dummy)
+    app = create_http_api_app()
     client = TestClient(app)
 
     payload = {"close": [1, 2, 3, 4, 5], "timeperiod": 3}
@@ -68,10 +59,9 @@ def test_call_tool_returns_dict_values(monkeypatch):
 
             return Result()
 
-    dummy = DummyMCP()
     monkeypatch.setattr(indicators.registry, "get_indicator", lambda name: DictIndicator(), raising=False)
 
-    app = create_http_app(dummy)
+    app = create_http_api_app()
     client = TestClient(app)
 
     payload = {"close": [1, 2, 3, 4, 5], "timeperiod": 3}
@@ -84,10 +74,9 @@ def test_call_tool_returns_dict_values(monkeypatch):
 
 
 def test_call_tool_missing_close(monkeypatch):
-    dummy = DummyMCP()
     monkeypatch.setattr(indicators.registry, "get_indicator", lambda name: FakeIndicator(), raising=False)
 
-    app = create_http_app(dummy)
+    app = create_http_api_app()
     client = TestClient(app)
 
     r = client.post("/api/tools/sma", json={"timeperiod": 3})
@@ -96,10 +85,9 @@ def test_call_tool_missing_close(monkeypatch):
 
 
 def test_call_tool_not_found(monkeypatch):
-    dummy = DummyMCP()
     monkeypatch.setattr(indicators.registry, "get_indicator", lambda name: None, raising=False)
 
-    app = create_http_app(dummy)
+    app = create_http_api_app()
     client = TestClient(app)
 
     payload = {"close": [1, 2, 3], "timeperiod": 3}

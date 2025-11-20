@@ -2,7 +2,7 @@
 
 import pytest
 
-from mcp_talib.core.server import create_server
+from mcp_talib.core.mcp_server import create_mcp_server
 from mcp_talib.indicators import registry
 from mcp_talib.models.market_data import MarketData
 
@@ -10,7 +10,7 @@ from mcp_talib.models.market_data import MarketData
 @pytest.mark.asyncio
 async def test_server_creation():
     """Test that server can be created and tools are registered."""
-    server = create_server()
+    server = create_mcp_server()
     assert server is not None
 
 
@@ -79,7 +79,7 @@ async def test_transport_stability():
     """Test that transport layer can be instantiated without crashing."""
     from mcp_talib.transport.stdio import StdioTransport
 
-    server = create_server()
+    server = create_mcp_server()
     transport = StdioTransport(server)
 
     # Verify transport setup doesn't crash and references server

@@ -1,47 +1,59 @@
 """HTTP transport implementation for MCP using FastMCP."""
 
 import logging
-import uvicorn
-from typing import cast
+from typing import Any
 from mcp.server.fastmcp import FastMCP
+from starlette.middleware.cors import CORSMiddleware
+import uvicorn
 from .base import BaseTransport
-from ..http_api import create_http_app
 
 # Configure logger
 logger = logging.getLogger(__name__)
 
 
 class HttpTransport(BaseTransport):
-    """HTTP transport implementation using FastMCP."""
+    """HTTP transport implementation using FastMCP streamable-http with CORS support.
     
-    def __init__(self, server: FastMCP, host: str = "0.0.0.0", port: int = 8000, debug: bool = False):
-        super().__init__(server, debug)
+    This transport runs the MCP server over HTTP using FastMCP's built-in
+    streamable-http transport with proper CORS middleware for browser-based clients.
+    """
+    
+    def __init__(self, server: FastMCP[Any], host: str = "0.0.0.0", port: int = 8000, debug: bool = False):
+        super().__init__(server, debug)  # type: ignore
         self.host = host
         self.port = port
     
     async def run(self) -> None:
-        """Run MCP server over HTTP with CORS support for browser-based clients like MCP Inspector."""
+        """Run MCP server over HTTP with CORS middleware for browser clients."""
         if self.debug:
             logger.debug(f"Starting MCP server with HTTP transport on {self.host}:{self.port}")
         
-        # Update server settings with host and port
-        self.server.settings.host = self.host
-        self.server.settings.port = self.port
+        # Get the Streamable HTTP app from FastMCP
+        # This app already has proper lifespan management for the session manager
+        app = self.server.streamable_http_app()  # type: ignore
         
-        # Create a FastAPI app that mounts the MCP Starlette app and exposes
-        # HTTP endpoints for tools. `create_http_app` applies the necessary
-        # CORS middleware and mounts `/mcp` for MCP clients.
-        # `self.server` should be a FastMCP instance; cast for static checkers.
-        app = create_http_app(cast(FastMCP, self.server))
-
-        # Run the ASGI app using Uvicorn directly so middleware and sub-apps
-        # are properly applied.
+        # Add CORS middleware for browser-based MCP clients (e.g., MCP Inspector)
+        # add_middleware adds the middleware to the app (not a Mount), so lifespan works
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=["*"],  # In production, specify exact origins like ["http://localhost:6274"]
+            allow_methods=["GET", "POST", "DELETE", "OPTIONS"],
+            allow_headers=[
+                "mcp-protocol-version",
+                "mcp-session-id",
+                "Authorization",
+                "Content-Type",
+            ],
+            expose_headers=["mcp-session-id"],
+            allow_credentials=True,
+        )
+        
+        # Run with uvicorn
         config = uvicorn.Config(
-            app=app,
+            app,
             host=self.host,
             port=self.port,
-            log_level="info" if self.debug else "warning",
-            access_log=self.debug,
+            log_level="debug" if self.debug else "info"
         )
         server = uvicorn.Server(config)
         await server.serve()

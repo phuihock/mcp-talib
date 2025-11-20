@@ -5,7 +5,7 @@ import pytest
 import pytest_asyncio
 from typing import AsyncGenerator
 
-from src.mcp_talib.core.server import create_server
+from src.mcp_talib.core.mcp_server import create_mcp_server
 from src.mcp_talib.transport.stdio import StdioTransport
 
 
@@ -17,10 +17,10 @@ def event_loop():
     loop.close()
 
 
-@pytest_asyncio.fixture
+@pytest.fixture
 async def server():
-    """Create a test MCP server instance."""
-    return create_server()
+    """Fixture that provides a test server instance."""
+    return create_mcp_server()
 
 
 @pytest_asyncio.fixture
