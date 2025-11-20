@@ -1,0 +1,21 @@
+{
+  "mcpServers": {
+    "mcp-talib": {
+      "command": "source",
+      "args": [
+        ".venv/bin/activate",
+        "&&",
+        "python",
+        "-m",
+        "mcp_talib.cli",
+        "--transport",
+        "stdio",
+        "--debug"
+      ],
+      "cwd": "/home/phuihock/github/mcp-talib",
+      "env": {
+        "MCP_JSON_ONLY": "1"
+      }
+    }
+  }
+}
