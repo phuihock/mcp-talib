@@ -45,7 +45,88 @@ def create_http_api_app() -> FastAPI:
         """Health check endpoint."""
         return {"status": "ok"}
 
-    @api.post("/api/tools/{tool_name}", response_model=ToolResult)
+    @api.post("/api/tools/{tool_name}", response_model=ToolResult, openapi_extra={
+        "requestBody": {
+            "content": {
+                "application/json": {
+                    "examples": {
+                        "sma": {
+                            "summary": "Calculate Simple Moving Average",
+                            "value": {"close_prices": [1,2,3,4,5], "timeperiod": 3}
+                        },
+                        "ema": {
+                            "summary": "Calculate Exponential Moving Average",
+                            "value": {"close_prices": [1,2,3,4,5], "timeperiod": 3}
+                        },
+                        "rsi": {
+                            "summary": "Calculate Relative Strength Index",
+                            "value": {"close_prices": [1,2,3,4,5], "timeperiod": 14}
+                        },
+                        "bbands": {
+                            "summary": "Calculate Bollinger Bands",
+                            "value": {"close_prices": [1,2,3,4,5], "timeperiod": 20, "nbdevup": 2.0, "nbdevdn": 2.0, "matype": 0}
+                        },
+                        "dema": {
+                            "summary": "Calculate Double Exponential Moving Average",
+                            "value": {"close_prices": [1,2,3,4,5], "timeperiod": 30}
+                        },
+                        "ht_trendline": {
+                            "summary": "Calculate Hilbert Transform Trendline",
+                            "value": {"close_prices": [1,2,3,4,5]}
+                        },
+                        "kama": {
+                            "summary": "Calculate Kaufman Adaptive Moving Average",
+                            "value": {"close_prices": [1,2,3,4,5], "timeperiod": 10}
+                        },
+                        "ma": {
+                            "summary": "Calculate Moving Average",
+                            "value": {"close_prices": [1,2,3,4,5], "timeperiod": 30, "matype": 0}
+                        },
+                        "mama": {
+                            "summary": "Calculate MESA Adaptive Moving Average",
+                            "value": {"close_prices": [1,2,3,4,5], "fastlimit": 0.5, "slowlimit": 0.05}
+                        },
+                        "mavp": {
+                            "summary": "Calculate Moving Average Variable Period",
+                            "value": {"close_prices": [1,2,3,4,5], "periods": [3,4,5], "minperiod": 2, "maxperiod": 30}
+                        },
+                        "midpoint": {
+                            "summary": "Calculate Midpoint",
+                            "value": {"close_prices": [1,2,3,4,5], "timeperiod": 14}
+                        },
+                        "midprice": {
+                            "summary": "Calculate Midpoint Price",
+                            "value": {"high_prices": [2,3,4,5,6], "low_prices": [1,2,3,4,5], "timeperiod": 14}
+                        },
+                        "sar": {
+                            "summary": "Calculate Parabolic SAR",
+                            "value": {"high_prices": [2,3,4,5,6], "low_prices": [1,2,3,4,5], "acceleration": 0.02, "maximum": 0.2}
+                        },
+                        "sarext": {
+                            "summary": "Calculate Parabolic SAR Extended",
+                            "value": {"high_prices": [2,3,4,5,6], "low_prices": [1,2,3,4,5], "startvalue": None, "offsetonreverse": 0.0, "acceleration_initlong": 0.02, "acceleration_long": 0.02, "acceleration_maxlong": 0.2, "acceleration_initshort": 0.02, "acceleration_short": 0.02, "acceleration_maxshort": 0.2}
+                        },
+                        "t3": {
+                            "summary": "Calculate T3 Moving Average",
+                            "value": {"close_prices": [1,2,3,4,5], "timeperiod": 5, "vfactor": 0.7}
+                        },
+                        "tema": {
+                            "summary": "Calculate Triple Exponential Moving Average",
+                            "value": {"close_prices": [1,2,3,4,5], "timeperiod": 30}
+                        },
+                        "trima": {
+                            "summary": "Calculate Triangular Moving Average",
+                            "value": {"close_prices": [1,2,3,4,5], "timeperiod": 30}
+                        },
+                        "wma": {
+                            "summary": "Calculate Weighted Moving Average",
+                            "value": {"close_prices": [1,2,3,4,5], "timeperiod": 30}
+                        },
+                    }
+                }
+            }
+        }
+    })
     async def call_tool(tool_name: str, payload: ToolRequest):
         """Generic wrapper to call a registered indicator.
 
