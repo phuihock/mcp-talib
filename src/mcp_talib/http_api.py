@@ -67,23 +67,27 @@ def create_http_app(mcp: FastMCP) -> FastAPI:
 
     @api.get("/api/tools")
     async def list_tools() -> Dict[str, List[str]]:
-        """Return a best-effort list of available tool names."""
-        # Try registry API; fall back to a conservative list if unavailable
-        tools: List[str] = []
-        if hasattr(registry, "list_indicators"):
-            try:
-                tools = registry.list_indicators()
-            except Exception:
-                tools = []
-
-        if not tools:
-            # minimal fallback — update as indicators change
-            tools = ["sma", "ema", "rsi"]
-
+        """Return a list of all available tool names."""
+        tools = registry.list_indicators()
         return {"tools": tools}
 
-    # Mount the FastMCP starlette app so MCP clients continue to work at /mcp
+    # Provide a lightweight human-friendly status at `/mcp/status` so a plain
+    # GET to a non-streaming path returns something useful for humans/browsers.
+    # Keep the actual MCP protocol endpoints (streaming, POST, SSE) mounted
+    # at `/mcp` so MCP clients can connect without interference.
+    @api.get("/mcp/status", include_in_schema=False)
+    async def mcp_status():
+        return {
+            "mcp": "available",
+            "docs": "/docs",
+            "note": "use an MCP client at /mcp or POST /api/tools for calculations",
+        }
+
+    # Mount the FastMCP starlette app at the application root so the
+    # internal `/mcp` route defined by the FastMCP app is reachable at
+    # `/mcp` on the main API. Mounting at `/mcp/` caused the subapp's
+    # internal `/mcp` route to become `/mcp/mcp` which produced 404s.
     starlette_app = mcp.streamable_http_app()
-    api.mount("/mcp", starlette_app)
+    api.mount("/", starlette_app)
 
     return api
