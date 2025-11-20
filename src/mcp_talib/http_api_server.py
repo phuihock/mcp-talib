@@ -51,76 +51,76 @@ def create_http_api_app() -> FastAPI:
                 "application/json": {
                     "examples": {
                         "sma": {
-                            "summary": "Calculate Simple Moving Average",
-                            "value": {"close_prices": [1,2,3,4,5], "timeperiod": 3}
+                            "summary": "sma",
+                            "value": {"close": [1,2,3,4,5], "timeperiod": 3}
                         },
                         "ema": {
-                            "summary": "Calculate Exponential Moving Average",
-                            "value": {"close_prices": [1,2,3,4,5], "timeperiod": 3}
+                            "summary": "ema",
+                            "value": {"close": [1,2,3,4,5], "timeperiod": 3}
                         },
                         "rsi": {
-                            "summary": "Calculate Relative Strength Index",
-                            "value": {"close_prices": [1,2,3,4,5], "timeperiod": 14}
+                            "summary": "rsi",
+                            "value": {"close": [1,2,3,4,5], "timeperiod": 14}
                         },
                         "bbands": {
-                            "summary": "Calculate Bollinger Bands",
-                            "value": {"close_prices": [1,2,3,4,5], "timeperiod": 20, "nbdevup": 2.0, "nbdevdn": 2.0, "matype": 0}
+                            "summary": "bbands",
+                            "value": {"close": [1,2,3,4,5], "timeperiod": 20, "nbdevup": 2.0, "nbdevdn": 2.0, "matype": 0}
                         },
                         "dema": {
-                            "summary": "Calculate Double Exponential Moving Average",
-                            "value": {"close_prices": [1,2,3,4,5], "timeperiod": 30}
+                            "summary": "dema",
+                            "value": {"close": [1,2,3,4,5], "timeperiod": 30}
                         },
                         "ht_trendline": {
-                            "summary": "Calculate Hilbert Transform Trendline",
-                            "value": {"close_prices": [1,2,3,4,5]}
+                            "summary": "ht_trendline",
+                            "value": {"close": [1,2,3,4,5]}
                         },
                         "kama": {
-                            "summary": "Calculate Kaufman Adaptive Moving Average",
-                            "value": {"close_prices": [1,2,3,4,5], "timeperiod": 10}
+                            "summary": "kama",
+                            "value": {"close": [1,2,3,4,5], "timeperiod": 10}
                         },
                         "ma": {
-                            "summary": "Calculate Moving Average",
-                            "value": {"close_prices": [1,2,3,4,5], "timeperiod": 30, "matype": 0}
+                            "summary": "ma",
+                            "value": {"close": [1,2,3,4,5], "timeperiod": 30, "matype": 0}
                         },
                         "mama": {
-                            "summary": "Calculate MESA Adaptive Moving Average",
-                            "value": {"close_prices": [1,2,3,4,5], "fastlimit": 0.5, "slowlimit": 0.05}
+                            "summary": "mama",
+                            "value": {"close": [1,2,3,4,5], "fastlimit": 0.5, "slowlimit": 0.05}
                         },
                         "mavp": {
-                            "summary": "Calculate Moving Average Variable Period",
-                            "value": {"close_prices": [1,2,3,4,5], "periods": [3,4,5], "minperiod": 2, "maxperiod": 30}
+                            "summary": "mavp",
+                            "value": {"close": [1,2,3,4,5], "periods": [3,4,5], "minperiod": 2, "maxperiod": 30}
                         },
                         "midpoint": {
-                            "summary": "Calculate Midpoint",
-                            "value": {"close_prices": [1,2,3,4,5], "timeperiod": 14}
+                            "summary": "midpoint",
+                            "value": {"close": [1,2,3,4,5], "timeperiod": 14}
                         },
                         "midprice": {
-                            "summary": "Calculate Midpoint Price",
-                            "value": {"high_prices": [2,3,4,5,6], "low_prices": [1,2,3,4,5], "timeperiod": 14}
+                            "summary": "midprice",
+                            "value": {"high": [2,3,4,5,6], "low": [1,2,3,4,5], "timeperiod": 14}
                         },
                         "sar": {
-                            "summary": "Calculate Parabolic SAR",
-                            "value": {"high_prices": [2,3,4,5,6], "low_prices": [1,2,3,4,5], "acceleration": 0.02, "maximum": 0.2}
+                            "summary": "sar",
+                            "value": {"high": [2,3,4,5,6], "low": [1,2,3,4,5], "acceleration": 0.02, "maximum": 0.2}
                         },
                         "sarext": {
-                            "summary": "Calculate Parabolic SAR Extended",
-                            "value": {"high_prices": [2,3,4,5,6], "low_prices": [1,2,3,4,5], "startvalue": None, "offsetonreverse": 0.0, "acceleration_initlong": 0.02, "acceleration_long": 0.02, "acceleration_maxlong": 0.2, "acceleration_initshort": 0.02, "acceleration_short": 0.02, "acceleration_maxshort": 0.2}
+                            "summary": "sarext",
+                            "value": {"high": [2,3,4,5,6], "low": [1,2,3,4,5], "startvalue": None, "offsetonreverse": 0.0, "acceleration_initlong": 0.02, "acceleration_long": 0.02, "acceleration_maxlong": 0.2, "acceleration_initshort": 0.02, "acceleration_short": 0.02, "acceleration_maxshort": 0.2}
                         },
                         "t3": {
-                            "summary": "Calculate T3 Moving Average",
-                            "value": {"close_prices": [1,2,3,4,5], "timeperiod": 5, "vfactor": 0.7}
+                            "summary": "t3",
+                            "value": {"close": [1,2,3,4,5], "timeperiod": 5, "vfactor": 0.7}
                         },
                         "tema": {
-                            "summary": "Calculate Triple Exponential Moving Average",
-                            "value": {"close_prices": [1,2,3,4,5], "timeperiod": 30}
+                            "summary": "tema",
+                            "value": {"close": [1,2,3,4,5], "timeperiod": 30}
                         },
                         "trima": {
-                            "summary": "Calculate Triangular Moving Average",
-                            "value": {"close_prices": [1,2,3,4,5], "timeperiod": 30}
+                            "summary": "trima",
+                            "value": {"close": [1,2,3,4,5], "timeperiod": 30}
                         },
                         "wma": {
-                            "summary": "Calculate Weighted Moving Average",
-                            "value": {"close_prices": [1,2,3,4,5], "timeperiod": 30}
+                            "summary": "wma",
+                            "value": {"close": [1,2,3,4,5], "timeperiod": 30}
                         },
                     }
                 }
