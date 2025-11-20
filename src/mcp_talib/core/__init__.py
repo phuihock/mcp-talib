@@ -1,5 +1,5 @@
-"""Core server functionality."""
+"""Core server implementations."""
 
-from .server import create_server
+from .mcp_server import create_mcp_server
 
-__all__ = ["create_server"]
+__all__ = ["create_mcp_server"]
