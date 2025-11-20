@@ -28,3 +28,7 @@ class IndicatorRegistry:
         """Get a specific indicator instance."""
         indicators = self.get_indicators()
         return indicators.get(name)
+    
+    def list_indicators(self) -> list[str]:
+        """List all registered indicator names."""
+        return sorted(list(self._indicator_classes.keys()))
